@@ -20,7 +20,7 @@ const pokemon = "Forneça um ID, de 0 a 720, para buscar informações sobre um 
 rl.question(pokemon, function(ans) {
     rl.close();
     const pokeid = ans.trim();
-    if (typeof(Number(pokeid)) === NaN || pokeid < 1 || pokeid > 720) {
+    if (isNaN(Number(pokeid)) || pokeid < 1 || pokeid > 720) {
         console.error("Não é um ID válido");
         console.error("Abortando");
         process.exit();
@@ -28,7 +28,6 @@ rl.question(pokemon, function(ans) {
 
     http.get(API + pokeid + "/", function(res) {
         let finalData = "";
-        console.log(res.headers);
 
         res.on("data", function(d) {
             finalData += d;
@@ -37,10 +36,12 @@ rl.question(pokemon, function(ans) {
         res.on("end", function() {
             finalData = JSON.parse(finalData);
 
-            console.log(finalData);
+            console.log(capitalize(finalData.name));
         });
     });
-
-
 });
+
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
